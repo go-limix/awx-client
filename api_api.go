@@ -35374,7 +35374,7 @@ Make GET request to this resource to retrieve a single schedule record containin
  * @param version
 @return Schedule
 */
-func (a *ApiApiService) ApiSchedulesPartialUpdate(ctx context.Context, body Schedule, id string, version string) (Schedule, *http.Response, error) {
+func (a *ApiApiService) ApiSchedulesPartialUpdate(ctx context.Context, body interface{}, id string, version string) (Schedule, *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Patch")
 		localVarPostBody   interface{}
