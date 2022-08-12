@@ -35678,7 +35678,10 @@ func (a *ApiApiService) ApiSchedulesListWithQueryParmas(ctx context.Context, que
 	localVarPath = strings.Replace(localVarPath, "{"+"version"+"}", fmt.Sprintf("%v", version), -1)
 
 	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := queryParams
+	localVarQueryParams := url.Values{}
+	for itemKey, itemValue := range queryParams {
+		localVarQueryParams.Add(itemKey, itemValue)
+	}
 	localVarFormParams := url.Values{}
 
 	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
