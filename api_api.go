@@ -24666,7 +24666,7 @@ Make GET request to this resource to retrieve the stdout from running this job. 
  * @param version
 @return UnifiedJobStdout
 */
-func (a *ApiApiService) ApiJobsStdoutReadWithParams(ctx context.Context, id string, version string, queryParams map[string]string) (*[]byte, *http.Response, error) {
+func (a *ApiApiService) ApiJobsStdoutReadWithParams(ctx context.Context, id string, version string, queryParams map[string]string) ([]byte, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Get")
 		localVarPostBody    interface{}
@@ -24714,7 +24714,7 @@ func (a *ApiApiService) ApiJobsStdoutReadWithParams(ctx context.Context, id stri
 		return localVarReturnValue, localVarHttpResponse, err
 	}
 
-	, err := ioutil.ReadAll(localVarHttpResponse.Body)
+	localVarBody, err := ioutil.ReadAll(localVarHttpResponse.Body)
 	localVarHttpResponse.Body.Close()
 	if err != nil {
 		return localVarReturnValue, localVarHttpResponse, err
@@ -24723,7 +24723,7 @@ func (a *ApiApiService) ApiJobsStdoutReadWithParams(ctx context.Context, id stri
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
 		// err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
-		return &localVarBody, localVarHttpResponse, err
+		return localVarBody, localVarHttpResponse, err
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
