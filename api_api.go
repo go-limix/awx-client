@@ -24666,13 +24666,13 @@ Make GET request to this resource to retrieve the stdout from running this job. 
  * @param version
 @return UnifiedJobStdout
 */
-func (a *ApiApiService) ApiJobsStdoutReadWithParams(ctx context.Context, id string, version string, queryParams map[string]string) (UnifiedJobStdout, *http.Response, error) {
+func (a *ApiApiService) ApiJobsStdoutReadWithParams(ctx context.Context, id string, version string, queryParams map[string]string) (string, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Get")
 		localVarPostBody    interface{}
 		localVarFileName    string
 		localVarFileBytes   []byte
-		localVarReturnValue UnifiedJobStdout
+		localVarReturnValue string
 	)
 
 	// create path and map variables
