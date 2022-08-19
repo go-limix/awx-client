@@ -24659,6 +24659,97 @@ func (a *ApiApiService) ApiJobsStdoutRead(ctx context.Context, id string, versio
 }
 
 /*
+ApiApiService # Retrieve Job Stdout:
+Make GET request to this resource to retrieve the stdout from running this job.  ## Format  Use the &#x60;format&#x60; query string parameter to specify the output format.  * Browsable API: &#x60;?format&#x3D;api&#x60; * HTML: &#x60;?format&#x3D;html&#x60; * Plain Text: &#x60;?format&#x3D;txt&#x60; * Plain Text with ANSI color codes: &#x60;?format&#x3D;ansi&#x60; * JSON structure: &#x60;?format&#x3D;json&#x60; * Downloaded Plain Text: &#x60;?format&#x3D;txt_download&#x60; * Downloaded Plain Text with ANSI color codes: &#x60;?format&#x3D;ansi_download&#x60;  (_New in Ansible Tower 2.0.0_) When using the Browsable API, HTML and JSON formats, the &#x60;start_line&#x60; and &#x60;end_line&#x60; query string parameters can be used to specify a range of line numbers to retrieve.  Use &#x60;dark&#x3D;1&#x60; or &#x60;dark&#x3D;0&#x60; as a query string parameter to force or disable a dark background.  Files over 1.0 MB (configurable) will not display in the browser. Use the &#x60;txt_download&#x60; or &#x60;ansi_download&#x60; formats to download the file directly to view it.
+ * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param id
+ * @param version
+@return UnifiedJobStdout
+*/
+func (a *ApiApiService) ApiJobsStdoutReadWithParams(ctx context.Context, id string, version string, queryParams map[string]string) (UnifiedJobStdout, *http.Response, error) {
+	var (
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
+		localVarReturnValue UnifiedJobStdout
+	)
+
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/{version}/jobs/{id}/stdout/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", fmt.Sprintf("%v", id), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"version"+"}", fmt.Sprintf("%v", version), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	for key, value := range queryParams {
+		localVarQueryParams.Add(key, value)
+	}
+
+	// to determine the Content-Type header
+	localVarHttpContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHttpContentType := selectHeaderContentType(localVarHttpContentTypes)
+	if localVarHttpContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHttpContentType
+	}
+
+	// to determine the Accept header
+	localVarHttpHeaderAccepts := []string{"text/plain", "application/json"}
+
+	// set Accept header
+	localVarHttpHeaderAccept := selectHeaderAccept(localVarHttpHeaderAccepts)
+	if localVarHttpHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
+	}
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHttpResponse, err := a.client.callAPI(r)
+	if err != nil || localVarHttpResponse == nil {
+		return localVarReturnValue, localVarHttpResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHttpResponse.Body)
+	localVarHttpResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHttpResponse, err
+	}
+
+	if localVarHttpResponse.StatusCode < 300 {
+		// If we succeed, return the data, otherwise pass on to decode error.
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
+			return localVarReturnValue, localVarHttpResponse, err
+		}
+	}
+
+	if localVarHttpResponse.StatusCode >= 300 {
+		newErr := GenericSwaggerError{
+			body:  localVarBody,
+			error: localVarHttpResponse.Status,
+		}
+		if localVarHttpResponse.StatusCode == 200 {
+			var v UnifiedJobStdout
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
+		}
+		return localVarReturnValue, localVarHttpResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHttpResponse, nil
+}
+
+/*
 ApiApiService # List Labels:
 Make a GET request to this resource to retrieve the list of labels.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of labels found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more label records.    ## Results  Each label data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this label. (integer) * &#x60;type&#x60;: Data type for this label. (choice) * &#x60;url&#x60;: URL for this label. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this label was created. (datetime) * &#x60;modified&#x60;: Timestamp when this label was last modified. (datetime) * &#x60;name&#x60;: Name of this label. (string) * &#x60;organization&#x60;: Organization this label belongs to. (id)    ## Sorting  To specify that labels are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
