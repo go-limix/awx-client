@@ -12,11 +12,12 @@ package swagger
 import (
 	"context"
 	"fmt"
-	"github.com/antihax/optional"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -24697,7 +24698,7 @@ func (a *ApiApiService) ApiJobsStdoutReadWithParams(ctx context.Context, id stri
 	}
 
 	// to determine the Accept header
-	localVarHttpHeaderAccepts := []string{"text/plain", "application/json"}
+	localVarHttpHeaderAccepts := []string{}
 
 	// set Accept header
 	localVarHttpHeaderAccept := selectHeaderAccept(localVarHttpHeaderAccepts)
